@@ -26,7 +26,6 @@ def get_user_info():
     hostname = socket.gethostname()  # Get the system's hostname
     return username, hostname
 
-# Create or append to the audit log
 def update_audit_log(audit_log_path, username, hostname, date_time, new_iocs_count, total_iocs, results_written, repository_path):
     log_entry = (
         f"Date and Time of Execution: {date_time}\n"
@@ -38,14 +37,12 @@ def update_audit_log(audit_log_path, username, hostname, date_time, new_iocs_cou
         f"Hostname: {hostname}\n"
         "------------------------------------------\n"
     )
-    
-    # If audit log doesn't exist, create it
+
     if not os.path.exists(audit_log_path):
         with open(audit_log_path, 'w') as file:
             file.write("Audit Log\n")
             file.write("==========================================\n")
     
-    # Append the new log entry
     with open(audit_log_path, 'a') as file:
         file.write(log_entry)
 
@@ -171,7 +168,6 @@ def store_values_in_repository(values, repository_path):
                 repository_data[token].append(value)
                 new_iocs_count += 1
     
-    # Save updated repository data
     try:
         with open(repository_path, 'w') as file:
             json.dump(repository_data, file, indent=4)
@@ -201,7 +197,6 @@ def main():
     directory_info = get_directory_info(directories)
     output_directory = input("Enter the directory to save the results: ")
     
-    # Result file names
     output_file_path = os.path.join(output_directory, "extracted_values.json")
     current_date = datetime.now().strftime('%Y-%m-%d')
     output_file_path_duplicates = os.path.join(output_directory, f"duplicates_{current_date}.txt")
@@ -209,18 +204,14 @@ def main():
 
     write_extracted_values(extracted_values, output_file_path, directory_info)
     write_duplicates(duplicates, output_file_path_duplicates)
-    
-    # Store values in the repository and check for duplicates in repository.json
-    repository_path = os.path.join(output_directory, "repository.json")
-    new_iocs_count, current_repo_size, duplicates_in_repository = store_values_in_repository(extracted_values, repository_path)
 
-    # Report any duplicates found in the repository.json
+    repository_path = os.path.join(output_directory, "repository.json")
+
     if duplicates_in_repository:
         for token, dups in duplicates_in_repository.items():
             for dup, file_path in dups:
-                pass  # Handle any custom logging for duplicates if necessary
-    
-    # Audit log
+                pass 
+             
     audit_log_path = os.path.join(output_directory, "audit_log.txt")
     username, hostname = get_user_info()
     current_date_time = datetime.now().isoformat()
