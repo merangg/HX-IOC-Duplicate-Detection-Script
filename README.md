@@ -1,4 +1,4 @@
-# **IOC Rule Deduplication Script**
+# **HX IOC Rule Deduplication Script**
 
 ## **Overview**
 This Python script helps security analysts detect and remove duplicate entries in `.rules` files. It checks for duplicates both within the newly uploaded `.rules` files and against a large existing repository. The script is intended to be run once a week for rule cleanup and repository management.
